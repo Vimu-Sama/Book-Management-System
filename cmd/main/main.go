@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Vimu-Sama/Book-Management-System/packages/config"
 	"github.com/Vimu-Sama/Book-Management-System/packages/routes"
 	"github.com/gorilla/mux"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -12,9 +13,10 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal(err)
 	}
+	config.Connect()
 	appRouter := mux.NewRouter()
 	routes.BookManagementRoutes(appRouter)
 	http.Handle("/", appRouter)

@@ -31,20 +31,22 @@ func (book *Book) CreateBook() Book {
 	return *book
 }
 
-func GetBookById(userId int64) Book {
+func GetBookById(userId int64) (Book, *gorm.DB) {
 	var getBook Book
 	if err := db.Where("ID=?", userId).Find(getBook); err != nil {
 		log.Default().Printf("Error occured while Reading Id-> %v", err)
 	}
-	return getBook
+	return getBook, db
 }
 
 func GetAllBooks() []Book {
-	var getBookArray []Book
-	if err := db.Find(getBookArray); err != nil {
-		log.Default().Printf("Error occured while Reading Id-> %v", err)
+	var books []Book
+	result := db.Find(&books)
+	fmt.Printf("this here")
+	if result.Error != nil {
+		fmt.Printf("Error occured-> %v", result.Error)
 	}
-	return getBookArray
+	return books
 }
 
 func DeleteBook(userId int64) Book {

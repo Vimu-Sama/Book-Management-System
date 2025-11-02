@@ -26,7 +26,7 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Get Books Function called\n")
 	books := models.GetAllBooks()
 	res, _ := json.Marshal(books)
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
@@ -35,7 +35,7 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	extractedId := vars["BookId"]
 	bookId, _ := strconv.ParseInt(extractedId, 0, 0)
-	bookDetails := models.GetBookById(bookId)
+	bookDetails, _ := models.GetBookById(bookId)
 	res, _ := json.Marshal(bookDetails)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -48,9 +48,23 @@ func UpdateBookRecord(w http.ResponseWriter, r *http.Request) {
 	data := mux.Vars(r)
 	idString := data["BookId"]
 	bookId, _ := strconv.ParseInt(idString, 0, 0)
-	_ = models.DeleteBook(bookId)
+	// _ = models.DeleteBook(bookId)
+	bookDetails, db := models.GetBookById(bookId)
 	utils.ParseBody(r, bookUpdatedData)
-
+	if bookUpdatedData.Name != "" {
+		bookDetails.Name = bookUpdatedData.Name
+	}
+	if bookUpdatedData.Author != "" {
+		bookDetails.Author = bookUpdatedData.Author
+	}
+	if bookUpdatedData.Publication != "" {
+		bookDetails.Publication = bookUpdatedData.Publication
+	}
+	db.Save(&bookDetails)
+	resMarshalled, _ := json.Marshal(bookDetails)
+	w.Header().Set("Content-Type", "Application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(resMarshalled)
 }
 
 func RemoveBook(w http.ResponseWriter, r *http.Request) {
