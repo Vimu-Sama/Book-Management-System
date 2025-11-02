@@ -42,7 +42,6 @@ func GetBookById(userId int64) (Book, *gorm.DB) {
 func GetAllBooks() []Book {
 	var books []Book
 	result := db.Find(&books)
-	fmt.Printf("this here")
 	if result.Error != nil {
 		fmt.Printf("Error occured-> %v", result.Error)
 	}

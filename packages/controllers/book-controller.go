@@ -26,7 +26,7 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Get Books Function called\n")
 	books := models.GetAllBooks()
 	res, _ := json.Marshal(books)
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
